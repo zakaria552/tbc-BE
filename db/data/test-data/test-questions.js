@@ -10,6 +10,7 @@ module.exports = [
     difficulty: "medium",
     regions: [],
     isNiche: false,
+    dateAsked: "2022-12-19",
   },
   {
     category: "Society & Culture",
@@ -21,6 +22,7 @@ module.exports = [
     type: "Multiple Choice",
     regions: [],
     isNiche: false,
+    dateAsked: "2022-12-19",
   },
   {
     category: "Film & TV",
@@ -37,6 +39,7 @@ module.exports = [
     difficulty: "easy",
     regions: [],
     isNiche: false,
+    dateAsked: "2022-12-19",
   },
   {
     category: "Science",
@@ -53,6 +56,7 @@ module.exports = [
     difficulty: "easy",
     regions: [],
     isNiche: false,
+    dateAsked: "2022-12-19",
   },
   {
     category: "Film & TV",
@@ -65,5 +69,6 @@ module.exports = [
     difficulty: "medium",
     regions: [],
     isNiche: false,
+    dateAsked: "2022-12-19",
   },
 ];
