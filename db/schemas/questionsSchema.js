@@ -6,11 +6,8 @@ const questionsSchema = mongoose.Schema(
     correctAnswer: String,
     incorrectAnswers: Array,
     question: String,
-    tags: Array,
-    type: String,
     difficulty: String,
-    regions: Array,
-    isNiche: Boolean,
+    dateAsked: String,
   },
   {
     timestamps: true,
