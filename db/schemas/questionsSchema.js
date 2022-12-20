@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const questionsSchema = mongoose.Schema(
   {
     category: String,
@@ -16,4 +17,6 @@ const questionsSchema = mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("question", questionsSchema);
+const QuestionModel = mongoose.model("question", questionsSchema);
+
+module.exports = QuestionModel;
