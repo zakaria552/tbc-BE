@@ -1,33 +1,34 @@
-const db = require("../db/connection");
-const seed = require("../db/seed/seed");
-const testData = require("../db/data/test-data/");
-const request = require("supertest");
-const app = require("../app");
+const db = require('../db/connection');
+const seed = require('../db/seed/seed');
+const testData = require('../db/data/test-data/');
+const request = require('supertest');
+const app = require('../app');
 
 beforeEach(async () => {
   await seed(testData);
 });
+jest.setTimeout(20000);
 afterAll(() => {
   db.then((mongoose) => {
     mongoose.connection.close();
   });
 });
 
-describe("/*", () => {
-  test("GET - 404: Responds with 404 not found error when passed a bad path", () => {
+describe('/*', () => {
+  test('GET - 404: Responds with 404 not found error when passed a bad path', () => {
     return request(app)
-      .get("/api/something_bad")
+      .get('/api/something_bad')
       .expect(404)
       .then(({ body }) => {
-        expect(body.msg).toBe("Route does not exist");
+        expect(body.msg).toBe('Route does not exist');
       });
   });
 });
 
-describe("GET /questions", () => {
-  test("GET - 200: Responds with an array of all questions", () => {
+describe('GET /questions', () => {
+  test('GET - 200: Responds with an array of all questions', () => {
     return request(app)
-      .get("/api/questions")
+      .get('/api/questions')
       .expect(200)
       .then(({ body }) => {
         expect(body.questions.length).toBeGreaterThan(0);
@@ -45,11 +46,11 @@ describe("GET /questions", () => {
   });
 });
 
-describe("GET /questions/today", () => {
+describe('GET /questions/today', () => {
   test("GET - 200: Always returns an array of question objects with a dateAsked value of today's date", () => {
-    const todaysDate = new Date().toISOString().split("T")[0];
+    const todaysDate = new Date().toISOString().split('T')[0];
     return request(app)
-      .get("/api/questions/today")
+      .get('/api/questions/today')
       .expect(200)
       .then(({ body }) => {
         expect(body.questions.length).toBe(5);

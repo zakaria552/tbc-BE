@@ -2,9 +2,13 @@
   "name": "tbc-be",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "listen.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node listen.js",
+    "seed": "node ./db/seed/run-seed.js",
+    "seed-prod": "NODE_ENV=production npm run seed",
+    "dev": "npm run seed && nodemon listen.js"
   },
   "repository": {
     "type": "git",
@@ -25,6 +29,7 @@
   },
   "devDependencies": {
     "jest": "^29.3.1",
+    "nodemon": "^2.0.20",
     "supertest": "^6.3.3"
   }
 }

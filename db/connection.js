@@ -1,11 +1,15 @@
-const ENV = process.env.NODE_ENV || "development";
+const ENV = process.env.NODE_ENV || 'development';
 
-require("dotenv").config({
+require('dotenv').config({
   path: `${__dirname}/../${ENV}.env`,
 });
 
-const mongoose = require("mongoose");
-mongoose.set("strictQuery", false); //required to avoid warning
+if (!process.env.ATLAS_URI) {
+  throw new Error('ATLAS_URI not set');
+}
+
+const mongoose = require('mongoose');
+mongoose.set('strictQuery', false); //required to avoid warning
 const mongoPath = process.env.ATLAS_URI;
 
 module.exports = mongoose.connect(mongoPath, {
