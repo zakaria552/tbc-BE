@@ -1,9 +1,9 @@
-const db = require("../db/connection");
-const seed = require("../db/seed/seed");
-const testData = require("../db/data/test-data/");
-const request = require("supertest");
-const app = require("../app");
-const QuestionModel = require("../db/schemas/questionsSchema");
+const db = require('../db/connection');
+const seed = require('../db/seed/seed');
+const testData = require('../db/data/test-data/');
+const request = require('supertest');
+const app = require('../app');
+const QuestionModel = require("../db/schemas/questionsSchema")
 
 beforeEach(async () => {
   await seed(testData);
@@ -75,4 +75,14 @@ describe("GET /questions/today", () => {
         expect(questions.length).toBe(7);
       });
   });
+  test("GET - 200: fetchs unique daily questions from trivia api", () => {
+    return request(app)
+      .get('/api/questions/today')
+      .expect(200)
+      .then(async () => {
+        const allQuestionDbId = await QuestionModel.find({}).select("id")
+        const areUnique = new Set(allQuestionDbId).size === allQuestionDbId.length
+        expect(areUnique).toBe(true);
+      });
+  })
 });
