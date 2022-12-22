@@ -1,3 +1,8 @@
+const date = new Date().getTime();
+const dateMiliSec = Math.floor(date / 1000 / 60 / 60 / 24);
+const twoDaysAgo = (dateMiliSec - 2) * 24 * 60 * 60 * 1000;
+const yesterdaysDate = new Date(twoDaysAgo).toISOString().split("T")[0];
+
 module.exports = [
   {
     category: "Geography-TEST",
@@ -10,7 +15,7 @@ module.exports = [
     difficulty: "medium",
     regions: [],
     isNiche: false,
-    dateAsked: "2022-12-19",
+    dateAsked: yesterdaysDate,
   },
   {
     category: "Society & Culture",
@@ -22,7 +27,7 @@ module.exports = [
     type: "Multiple Choice",
     regions: [],
     isNiche: false,
-    dateAsked: "2022-12-19",
+    dateAsked: "2022-12-01",
   },
   {
     category: "Film & TV",
@@ -39,7 +44,7 @@ module.exports = [
     difficulty: "easy",
     regions: [],
     isNiche: false,
-    dateAsked: "2022-12-19",
+    dateAsked: "2022-12-02",
   },
   {
     category: "Science",
@@ -56,7 +61,7 @@ module.exports = [
     difficulty: "easy",
     regions: [],
     isNiche: false,
-    dateAsked: "2022-12-19",
+    dateAsked: yesterdaysDate,
   },
   {
     category: "Film & TV",
@@ -69,6 +74,6 @@ module.exports = [
     difficulty: "medium",
     regions: [],
     isNiche: false,
-    dateAsked: "2022-12-19",
+    dateAsked: "2022-12-02",
   },
 ];
