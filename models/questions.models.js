@@ -25,14 +25,24 @@ exports.fetchTodaysQuestions = async () => {
 };
 
 exports.insertTodaysQuestions = async () => {
+  console.log("fetching")
   const todaysDate = new Date().toISOString().split("T")[0];
+  const allQuestionDbId = await QuestionModel.find({}).select("id")
+  const areUnique = true
   const res = await axios.get(
     "https://the-trivia-api.com/api/questions?limit=5"
   );
-  const questionsToInsert = res.data.map((question) => {
-    const newQuestion = { ...question, dateAsked: todaysDate };
-    return newQuestion;
-  });
-  await QuestionModel.insertMany(questionsToInsert);
-  return questionsToInsert;
+  res.data.forEach((res) => {
+    allQuestionDbId.includes(res.id) ? areUnique = false: ""
+  })
+  if(areUnique) {
+    const questionsToInsert = res.data.map((question) => {
+      const newQuestion = { ...question, dateAsked: todaysDate };
+      return newQuestion;
+    });
+    await QuestionModel.insertMany(questionsToInsert);
+    return questionsToInsert;
+  } else {
+    this.insertTodaysQuestions()
+  }
 };
