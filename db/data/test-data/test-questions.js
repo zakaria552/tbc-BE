@@ -56,7 +56,7 @@ module.exports = [
     difficulty: "easy",
     regions: [],
     isNiche: false,
-    dateAsked: "2022-12-19",
+    dateAsked: "2022-12-02",
   },
   {
     category: "Film & TV",
@@ -69,6 +69,6 @@ module.exports = [
     difficulty: "medium",
     regions: [],
     isNiche: false,
-    dateAsked: "2022-12-19",
+    dateAsked: "2022-12-01",
   },
 ];
