@@ -1,7 +1,7 @@
 module.exports = [
     {
         userId: "1",
-        usename: "zakaria",
+        username: "zakaria",
         currentStreak: 2,
         highestScore: 0,
         dateLastPlayed: "2022-12-19",
@@ -15,7 +15,7 @@ module.exports = [
     }, 
     {
         userId: "2",
-        usename: "alex",
+        username: "alex",
         currentStreak: 2,
         highestScore: 0,
         dateLastPlayed: "2022-12-19",
@@ -29,7 +29,7 @@ module.exports = [
     },
     {
         userId: "3",
-        usename: "fel",
+        username: "fel",
         currentStreak: 2,
         highestScore: 0,
         dateLastPlayed: "2022-12-19",
@@ -43,7 +43,7 @@ module.exports = [
     },
     {
         userId: "4",
-        usename: "dan",
+        username: "dan",
         currentStreak: 4,
         highestScore: 0,
         dateLastPlayed: "2022-12-19",

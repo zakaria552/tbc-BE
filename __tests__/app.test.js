@@ -8,7 +8,6 @@ const QuestionModel = require("../db/schemas/questionsSchema");
 beforeEach(async () => {
   await seed(testData);
 });
-jest.setTimeout(20000);
 afterAll(() => {
   db.then((mongoose) => {
     mongoose.connection.close();
@@ -87,3 +86,36 @@ describe("GET /questions/today", () => {
       });
   });
 });
+
+describe("get user by user id", () => {
+  test(":( POST - 400 returns bad request for missing required field", () => {
+    return request(app)
+      .post("/api/users")
+    .send({userame: "sak", usrId: {"6": 3}})
+      .expect(400)
+      .then(({body}) => {
+        expect(body).toEqual({msg: "missing required field"})
+      })
+  })
+  test(":( POST - 400 given required field but the wrong data type returns bad request", () => {
+    return request(app)
+      .post("/api/users")
+    .send({userame: false, userId: {"6": 3}})
+      .expect(400)
+      .then(({body}) => {
+        expect(body).toEqual({msg: "wrong data type for required field"})
+      })
+  })
+  test(":) POST - 200 returns user object", () => {
+    return request(app)
+      .post("/api/users")
+      .send({username: "fly", userId: "5"})
+      .expect(200)
+      .then(({body}) => {
+        expect(body.user).toMatchObject({
+          userId: "5",
+          username: "fly",
+        });
+      })
+  })
+})
