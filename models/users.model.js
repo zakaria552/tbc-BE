@@ -1,8 +1,8 @@
 const db = require("../db/connection");
-const UserModel = require("../db/schemas/usersSchema");
+const UsersModel = require("../db/schemas/usersSchema");
 
 exports.fetchUserByUserId = async (userId) => {
-  const user = await UserModel.find({ userId });
+  const user = await UsersModel.find({ userId });
   if (user.length === 0) {
     return Promise.reject({
       status: 400,
@@ -13,7 +13,7 @@ exports.fetchUserByUserId = async (userId) => {
 };
 
 exports.removeUserByUserId = async (userId) => {
-  await UserModel.deleteOne({ userId });
+  await UsersModel.deleteOne({ userId });
 };
 
 exports.fetchUser = async (user) => {
