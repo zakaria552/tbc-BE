@@ -5,6 +5,7 @@ exports.handleCustomErrors = (err, req, res, next) => {
   } else next(err);
 };
 exports.handleMongoDbErrors = (err, req, res, next) => {
+  console.log(err)
   Object.keys(err.errors).forEach((errField) => {
     if (err.errors[errField].kind === "required") {
       res.status(400).send({ msg: "missing required field" });
