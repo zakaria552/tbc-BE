@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const usersSchema = mongoose.Schema({
-  userId: {type: String,required: true},
-  username: {type: String,required: true},
+  userId: {type: String, required: true},
+  username: {type: String, required: true},
   currentStreak: Number,
   highestScore: Number,
   dateLastPlayed: String,
