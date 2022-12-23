@@ -89,7 +89,7 @@ describe("GET /questions/today", () => {
 });
 
 describe("users/:userId", () => {
-  test.only("GET:200 responds with a user object", () => {
+  test("GET:200 responds with a user object", () => {
     return request(app)
       .get("/api/users/4")
       .expect(200)
@@ -144,7 +144,7 @@ describe("post a new user", () => {
   test(":( POST - 400 returns bad request for missing required field", () => {
     return request(app)
       .post("/api/users")
-    .send({userame: "sak", usrId: {"6": 3}})
+      .send({userame: "sak", usrId: {"6": 3}})
       .expect(400)
       .then(({body}) => {
         expect(body).toEqual({msg: "missing required field"})
