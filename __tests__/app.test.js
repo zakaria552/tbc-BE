@@ -4,6 +4,7 @@ const testData = require("../db/data/test-data/");
 const request = require("supertest");
 const app = require("../app");
 const QuestionModel = require("../db/schemas/questionsSchema");
+const UsersModel = require("../db/schemas/usersSchema");
 
 beforeEach(async () => {
   await seed(testData);
@@ -87,7 +88,59 @@ describe("GET /questions/today", () => {
   });
 });
 
-describe("get user by user id", () => {
+describe("users/:userId", () => {
+  test.only("GET:200 responds with a user object", () => {
+    return request(app)
+      .get("/api/users/4")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.user[0]).toMatchObject({
+          userId: expect.any(String),
+          username: "dan",
+          _id: expect.any(String),
+          currentStreak: expect.any(Number),
+          highestScore: expect.any(Number),
+          dateLastPlayed: expect.any(String),
+          todayStats: {
+            date: expect.any(String),
+            score: expect.any(Number),
+            timeTaken: expect.any(String),
+            correctAns: expect.any(Number),
+          },
+          historyStats: expect.any(Array),
+          achievements: expect.any(Array),
+          friends: expect.any(Array),
+          leaderBoards: expect.any(Array),
+          __v: expect.any(Number),
+        });
+      });
+  });
+  test("DELETE: 204 responds with status code", () => {
+    return request(app)
+      .delete("/api/users/3")
+      .expect(204)
+      .then(async () => {
+        const users = await UsersModel.find();
+        expect(users.length).toBe(3);
+        users.forEach((user) => {
+          expect(user).toEqual(
+            expect.not.objectContaining({ username: "fel" })
+          );
+        });
+      });
+  });
+  test("GET:400 respondes with appropriate message when id is invalid", () => {
+    return request(app)
+      .get("/api/users/nonsense")
+      .expect(400)
+      .then(({ body }) => {
+        expect(body).toEqual({ msg: "Not Found" });
+      });
+  });
+});
+
+
+describe("post a new user", () => {
   test(":( POST - 400 returns bad request for missing required field", () => {
     return request(app)
       .post("/api/users")
@@ -119,3 +172,4 @@ describe("get user by user id", () => {
       })
   })
 })
+
