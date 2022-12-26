@@ -1,7 +1,8 @@
 const {
   fetchUserByUserId,
   removeUserByUserId,
-  fetchUser
+  fetchUser,
+  updateUser
 } = require("../models/users.model");
 
 exports.getUserById = (req, res, next) => {
@@ -22,10 +23,16 @@ exports.deleteUserByUserId = (req, res, next) => {
     .catch(next);
 };
 exports.postUser = async (req, res, next) => {
-  console.log(req.body)
   fetchUser(req.body).then((insertedUser) => {
       res.status(200).send({user: insertedUser[0]})
   }).catch((err) => {
       next(err)
+  })
+}
+exports.patchUser = async (req, res, next) => {
+  updateUser(req.params,req.body).then((data) => {
+    res.status(202).send({updatedUser: data})
+  }).catch((err) => {
+    next(err)
   })
 }
