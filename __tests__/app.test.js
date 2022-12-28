@@ -5,6 +5,8 @@ const request = require("supertest");
 const app = require("../app");
 const QuestionModel = require("../db/schemas/questionsSchema");
 const UsersModel = require("../db/schemas/usersSchema");
+const endPoints = require("../api")
+
 
 beforeEach(async () => {
   await seed(testData);
@@ -132,13 +134,12 @@ describe("users/:userId", () => {
   test("GET:400 respondes with appropriate message when id is invalid", () => {
     return request(app)
       .get("/api/users/nonsense")
-      .expect(400)
+      .expect(404)
       .then(({ body }) => {
-        expect(body).toEqual({ msg: "Not Found" });
+        expect(body).toEqual({ msg: "user not Found" });
       });
   });
 });
-
 
 describe("post a new user", () => {
   test(":( POST - 400 returns bad request for missing required field", () => {
@@ -173,3 +174,94 @@ describe("post a new user", () => {
   })
 })
 
+describe("patch the users details", () => {
+  test(":( Patch - given invalid userid returns user not found", () => {
+    return request(app)
+    .patch("/api/users/432")
+    .send({username: "jack"})
+    .expect(404)
+    .then(({body}) => {
+      expect(body.msg).toBe("user not found")
+    })
+  })
+  test(":( Patch - given invalid schema type to returns bad request", () => {
+    return request(app)
+    .patch("/api/users/1")
+    .send({username: {name: "jack"}})
+    .expect(400)
+    .then(({body}) => {
+      expect(body.msg).toBe("wrong data type for required field")
+    })
+  })
+  test(":) Patch - given valid userid and valid schema data type updates the user", () => {
+    const update = {
+      userId: "fdsfsd", 
+      username: "waffle",
+      currentStreak: 1,
+      highestScore: 0,
+      dateLastPlayed: "12-24-2022",
+      todayStats: {
+          date: "12-24-2022",
+          score: 1,
+          timeTaken: "120",
+          correctAns: 4,
+      },
+      historyStats: {
+        date: "12-24-2022",
+        score: 1,
+        timeTaken: "120",
+        correctAns: 4,
+      },
+      achievements: "7 day streak",
+      friends: {friend:"j32", addTo: true},
+      leaderBoards: {leaderBoard:"global", addTo: true},
+    }
+    return request(app)
+    .patch("/api/users/1")
+    .send(update)
+    .expect(202)
+    .then(({body}) => {
+      expect(body.updatedUser).toEqual({
+        userId: "1", 
+        username: "waffle",
+        currentStreak: 1,
+        highestScore: 0,
+        dateLastPlayed: "12-24-2022",
+        todayStats: {
+            date: "12-24-2022",
+            score: 1,
+            timeTaken: "120",
+            correctAns: 4,
+        },
+        historyStats: [{
+          date: "12-24-2022",
+          score: 1,
+          timeTaken: "120",
+          correctAns: 4,
+        }],
+        achievements: ["7 day streak"],
+        friends: ["2", "j32"],
+        leaderBoards: ["global", "quizNight", "global"],
+      })
+    })
+  })
+  test(":) Patch - deletes a friend from a friendlist", () => {
+    return request(app)
+    .patch("/api/users/2")
+    .send({friends: {friend: "1", addTo: false}})
+    .expect(202)
+    .then(({body}) => {
+      expect(body.updatedUser.friends).toEqual([])
+    })
+  })
+})
+describe("all available endPoints", () => {
+  test("responses with all available endpoints", () => {
+    return request(app)
+    .get("/api")
+    .expect(200)
+    .then(({body}) => {
+      expect(body).toEqual(endPoints)
+    })
+  })
+})
