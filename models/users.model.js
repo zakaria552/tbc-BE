@@ -16,7 +16,7 @@ exports.removeUserByUserId = async (userId) => {
   await UsersModel.deleteOne({ userId });
 };
 
-exports.fetchUser = async (user) => {
+exports.insertUser = async (user) => {
     const userObj = {
         userId: user.userId,
         username: user.username,
@@ -69,7 +69,7 @@ exports.updateUser = async ({userId}, bodyChanges) => {
     if(bodyChanges.leaderBoards.addTo) {
       updatedUser.leaderBoards = [...user[0].leaderBoards, bodyChanges.leaderBoards.leaderBoard]
     } else {
-add      const leaderBoardIndex = user[0].leaderBoards.indexOf(bodyChanges.leaderBoards.leaderBoard)
+      const leaderBoardIndex = user[0].leaderBoards.indexOf(bodyChanges.leaderBoards.leaderBoard)
       user[0].leaderBoards.splice(leaderBoardIndex, 1)
       updatedUser.leaderBoards = user[0].leaderBoards
     }
