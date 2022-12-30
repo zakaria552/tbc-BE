@@ -1,5 +1,6 @@
 const db = require("../db/connection");
 const QuestionModel = require("../db/schemas/questionsSchema");
+const LeaderboardModel = require("../db/schemas/leaderboardSchema");
 
 exports.deleteOldQuestions = () => {
   db.then(async () => {
@@ -18,4 +19,15 @@ exports.deleteOldQuestions = () => {
     });
     await Promise.all(promises);
   });
+};
+
+exports.resetGlobalLeaderboard = async () => {
+  const todaysDate = new Date().toISOString().split("T")[0];
+  const global = {
+    date: todaysDate,
+    members: [],
+    leaderboardName: 'global'
+  };
+  await LeaderboardModel.deleteMany();
+  await LeaderboardModel.insertMany(global);
 };

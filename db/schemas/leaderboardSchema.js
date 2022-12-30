@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const leaderboardSchema = mongoose.Schema({
-  date: String,
+  date: Date,
   members: Array, // [{username, todayStats}]
   leaderboardName: String,
 });

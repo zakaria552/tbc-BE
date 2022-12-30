@@ -1,7 +1,7 @@
 const db = require("../db/connection");
 const QuestionModel = require("../db/schemas/questionsSchema");
 const axios = require("axios");
-const { deleteOldQuestions } = require("../utils/utils");
+const { deleteOldQuestions, resetGlobalLeaderboard } = require("../utils/utils");
 
 exports.fetchQuestions = async () => {
   const questions = await db.then(async (mongoose) => {
@@ -21,6 +21,7 @@ exports.fetchTodaysQuestions = async () => {
   });
   if (!questions.length) {
     await deleteOldQuestions();
+    await resetGlobalLeaderboard();
     return await this.insertTodaysQuestions();
   }
   return questions;

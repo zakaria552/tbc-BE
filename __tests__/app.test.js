@@ -5,7 +5,8 @@ const request = require("supertest");
 const app = require("../app");
 const QuestionModel = require("../db/schemas/questionsSchema");
 const UsersModel = require("../db/schemas/usersSchema");
-const endPoints = require("../api")
+const LeaderboardModel = require("../db/schemas/leaderboardSchema");
+const endPoints = require("../api");
 
 
 beforeEach(async () => {
@@ -145,66 +146,66 @@ describe("post a new user", () => {
   test(":( POST - 400 returns bad request for missing required field", () => {
     return request(app)
       .post("/api/users")
-      .send({userame: "sak", usrId: {"6": 3}})
+      .send({ userame: "sak", usrId: { "6": 3 } })
       .expect(400)
-      .then(({body}) => {
-        expect(body).toEqual({msg: "missing required field"})
-      })
-  })
+      .then(({ body }) => {
+        expect(body).toEqual({ msg: "missing required field" });
+      });
+  });
   test(":( POST - 400 given required field but the wrong data type returns bad request", () => {
     return request(app)
       .post("/api/users")
-    .send({userame: false, userId: {"6": 3}})
+      .send({ userame: false, userId: { "6": 3 } })
       .expect(400)
-      .then(({body}) => {
-        expect(body).toEqual({msg: "wrong data type for required field"})
-      })
-  })
+      .then(({ body }) => {
+        expect(body).toEqual({ msg: "wrong data type for required field" });
+      });
+  });
   test(":) POST - 200 returns user object", () => {
     return request(app)
       .post("/api/users")
-      .send({username: "fly", userId: "5"})
+      .send({ username: "fly", userId: "5" })
       .expect(200)
-      .then(({body}) => {
+      .then(({ body }) => {
         expect(body.user).toMatchObject({
           userId: "5",
           username: "fly",
         });
-      })
-  })
-})
+      });
+  });
+});
 
 describe("patch the users details", () => {
   test(":( Patch - given invalid userid returns user not found", () => {
     return request(app)
-    .patch("/api/users/432")
-    .send({username: "jack"})
-    .expect(404)
-    .then(({body}) => {
-      expect(body.msg).toBe("user not found")
-    })
-  })
+      .patch("/api/users/432")
+      .send({ username: "jack" })
+      .expect(404)
+      .then(({ body }) => {
+        expect(body.msg).toBe("user not found");
+      });
+  });
   test(":( Patch - given invalid schema type to returns bad request", () => {
     return request(app)
-    .patch("/api/users/1")
-    .send({username: {name: "jack"}})
-    .expect(400)
-    .then(({body}) => {
-      expect(body.msg).toBe("wrong data type for required field")
-    })
-  })
+      .patch("/api/users/1")
+      .send({ username: { name: "jack" } })
+      .expect(400)
+      .then(({ body }) => {
+        expect(body.msg).toBe("wrong data type for required field");
+      });
+  });
   test(":) Patch - given valid userid and valid schema data type updates the user", () => {
     const update = {
-      userId: "fdsfsd", 
+      userId: "fdsfsd",
       username: "waffle",
       currentStreak: 1,
       highestScore: 0,
       dateLastPlayed: "12-24-2022",
       todayStats: {
-          date: "12-24-2022",
-          score: 1,
-          timeTaken: "120",
-          correctAns: 4,
+        date: "12-24-2022",
+        score: 1,
+        timeTaken: "120",
+        correctAns: 4,
       },
       historyStats: {
         date: "12-24-2022",
@@ -213,55 +214,106 @@ describe("patch the users details", () => {
         correctAns: 4,
       },
       achievements: "7 day streak",
-      friends: {friend:"j32", addTo: true},
-      leaderBoards: {leaderBoard:"global", addTo: true},
-    }
+      friends: { friend: "j32", addTo: true },
+      leaderBoards: { leaderBoard: "global", addTo: true },
+    };
     return request(app)
-    .patch("/api/users/1")
-    .send(update)
-    .expect(202)
-    .then(({body}) => {
-      expect(body.updatedUser).toEqual({
-        userId: "1", 
-        username: "waffle",
-        currentStreak: 1,
-        highestScore: 0,
-        dateLastPlayed: "12-24-2022",
-        todayStats: {
+      .patch("/api/users/1")
+      .send(update)
+      .expect(202)
+      .then(({ body }) => {
+        expect(body.updatedUser).toEqual({
+          userId: "1",
+          username: "waffle",
+          currentStreak: 1,
+          highestScore: 0,
+          dateLastPlayed: "12-24-2022",
+          todayStats: {
             date: "12-24-2022",
             score: 1,
             timeTaken: "120",
             correctAns: 4,
-        },
-        historyStats: [{
-          date: "12-24-2022",
-          score: 1,
-          timeTaken: "120",
-          correctAns: 4,
-        }],
-        achievements: ["7 day streak"],
-        friends: ["2", "j32"],
-        leaderBoards: ["global", "quizNight", "global"],
-      })
-    })
-  })
+          },
+          historyStats: [{
+            date: "12-24-2022",
+            score: 1,
+            timeTaken: "120",
+            correctAns: 4,
+          }],
+          achievements: ["7 day streak"],
+          friends: ["2", "j32"],
+          leaderBoards: ["global", "quizNight", "global"],
+        });
+      });
+  });
   test(":) Patch - deletes a friend from a friendlist", () => {
     return request(app)
-    .patch("/api/users/2")
-    .send({friends: {friend: "1", addTo: false}})
-    .expect(202)
-    .then(({body}) => {
-      expect(body.updatedUser.friends).toEqual([])
-    })
-  })
-})
+      .patch("/api/users/2")
+      .send({ friends: { friend: "1", addTo: false } })
+      .expect(202)
+      .then(({ body }) => {
+        expect(body.updatedUser.friends).toEqual([]);
+      });
+  });
+});
 describe("all available endPoints", () => {
   test("responses with all available endpoints", () => {
     return request(app)
-    .get("/api")
-    .expect(200)
-    .then(({body}) => {
-      expect(body).toEqual(endPoints)
-    })
-  })
-})
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body).toEqual(endPoints);
+      });
+  });
+});
+
+describe("leaderboard/:leaderboardName", () => {
+  test("GET: 200 responds with a leaderboard with max 10 players sorted by score in descending order", () => {
+    return request(app)
+      .get("/api/leaderboard/global")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.leaderboard[0].members.length).not.toBeGreaterThan(10);
+        const score = body.leaderboard[0].members.map(a => a.todayStats.score);
+        expect(score).toBeSorted({ descending: true });
+      });
+  });
+  test("POST: 201 creates a leaderboard. Responds with 201 and newly created leaderboard", async () => {
+    await LeaderboardModel.deleteMany();
+    return request(app)
+      .post("/api/leaderboard/global")
+      .expect(201)
+      .then(({ body }) => {
+        expect(body.leaderboard[0]).toMatchObject({
+          date: expect.any(String),
+          members: expect.any(Array),
+          leaderboardName: 'global',
+          _id: expect.any(String),
+          __v: expect.any(Number)
+        });
+      });
+  });
+  test('PATCH: 200 updates leaderboard members according to passed object. Responds with the newly added member', () => {
+    const today = new Date().toISOString().split("T")[0];
+    const memberPlay = {
+      username: "satoshi",
+      todayStats: {
+        date: today,
+        score: 7,
+        timeTaken: "200",
+        correctAns: 2
+      }
+    };
+    return request(app)
+      .patch("/api/leaderboard/global")
+      .send(memberPlay)
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.addedMember).toEqual({
+          username: 'satoshi',
+          todayStats: { date: '2022-12-30', score: 7, timeTaken: '200', correctAns: 2 }
+        });
+      });
+  });
+});
+

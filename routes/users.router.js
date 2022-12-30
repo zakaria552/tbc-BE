@@ -10,8 +10,8 @@ const usersRouter = require("express").Router();
 usersRouter.route("/:userId").get(getUserById);
 usersRouter.route("/:userId").delete(deleteUserByUserId);
 
-usersRouter.route("/").post(postUser)
-usersRouter.route("/:userId").patch(patchUser)
+usersRouter.route("/").post(postUser);
+usersRouter.route("/:userId").patch(patchUser);
 
 module.exports = usersRouter
 
