@@ -293,7 +293,7 @@ describe("leaderboard/:leaderboardName", () => {
         });
       });
   });
-  test('PATCH: 200 updates leaderboard members according to passed object. Responds with the newly added member', () => {
+  test.only('PATCH: 200 updates leaderboard members according to passed object. Responds with the newly added member', () => {
     const today = new Date().toISOString().split("T")[0];
     const memberPlay = {
       username: "satoshi",
@@ -311,7 +311,7 @@ describe("leaderboard/:leaderboardName", () => {
       .then(({ body }) => {
         expect(body.addedMember).toEqual({
           username: 'satoshi',
-          todayStats: { date: '2022-12-30', score: 7, timeTaken: '200', correctAns: 2 }
+          todayStats: { date: today, score: 7, timeTaken: '200', correctAns: 2 }
         });
       });
   });
