@@ -7,7 +7,7 @@ apiRouter.get("/", (req, res, next) => {
     res.status(200).send(endPoints);
 });
 apiRouter.use("/questions", questionsRouter);
-apiRouter.use("/leaderboard", leaderboardRouter);
+apiRouter.use("/leaderboards", leaderboardRouter);
 apiRouter.use("/users", usersRouter);
 
 

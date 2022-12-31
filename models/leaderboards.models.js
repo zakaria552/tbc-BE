@@ -2,11 +2,26 @@ const db = require("../db/connection");
 const LeaderboardModel = require("../db/schemas/leaderboardSchema");
 
 exports.fetchLeaderboard = async (leaderboardName) => {
-    const leaderboard = await LeaderboardModel.find({ leaderboardName }, { members: { $slice: 10 } });
-    const sorted = leaderboard[0].members.sort((a, b) => {
-        return b.todayStats.score - a.todayStats.score;
-    });
-    leaderboard[0].members = sorted;
+    const leaderboard = await LeaderboardModel.findOneAndUpdate(
+        //findOneAndUpdate required to be able to sort inner array elements
+        { leaderboardName },
+        {
+            $push: {
+                members: {
+                    $each: [],
+                    $sort: { "todayStats.score": -1 },
+                    $slice: 10
+                }
+            }
+        },
+        { new: true }
+    );
+    if (leaderboard === null) {
+        return Promise.reject({
+            status: 404,
+            msg: "leaderboard does not exist",
+        });
+    }
     return leaderboard;
 };
 
@@ -30,10 +45,18 @@ exports.insertLeaderboard = async (leaderboardName) => {
 };
 
 exports.updateLeaderboard = async (leaderboardName, newMember) => {
+    const leaderboard = await LeaderboardModel.find({ leaderboardName });
+
+    if (leaderboard.length === 0) {
+        return Promise.reject({
+            status: 404,
+            msg: "leaderboard does not exist",
+        });
+    }
     const addToLeaderboard = await LeaderboardModel.findOneAndUpdate(
         { leaderboardName },
         { $addToSet: { members: newMember } },
-        { upsert: true, new: true }
+        { new: true }
     );
     const addedMemberIndex = addToLeaderboard.members.length;
     return addToLeaderboard.members[addedMemberIndex - 1];

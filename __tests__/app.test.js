@@ -267,21 +267,22 @@ describe("all available endPoints", () => {
   });
 });
 
-describe("leaderboard/:leaderboardName", () => {
+describe("leaderboards/:leaderboardName", () => {
   test("GET: 200 responds with a leaderboard with max 10 players sorted by score in descending order", () => {
     return request(app)
-      .get("/api/leaderboard/global")
+      .get("/api/leaderboards/global")
       .expect(200)
       .then(({ body }) => {
-        expect(body.leaderboard[0].members.length).not.toBeGreaterThan(10);
-        const score = body.leaderboard[0].members.map(a => a.todayStats.score);
+        expect(body.leaderboard.members.length).not.toBeGreaterThan(10);
+        const score = body.leaderboard.members.map(a => a.todayStats.score);
         expect(score).toBeSorted({ descending: true });
       });
   });
   test("POST: 201 creates a leaderboard. Responds with 201 and newly created leaderboard", async () => {
     await LeaderboardModel.deleteMany();
     return request(app)
-      .post("/api/leaderboard/global")
+      .post("/api/leaderboards")
+      .send({ leaderboardName: 'global' })
       .expect(201)
       .then(({ body }) => {
         expect(body.leaderboard[0]).toMatchObject({
@@ -293,8 +294,8 @@ describe("leaderboard/:leaderboardName", () => {
         });
       });
   });
-  test.only('PATCH: 200 updates leaderboard members according to passed object. Responds with the newly added member', () => {
-    const today = new Date().toISOString().split("T")[0];
+  test('PATCH: 200 updates leaderboard members according to passed object. Responds with the newly added member', () => {
+    const today = new Date().toISOString();
     const memberPlay = {
       username: "satoshi",
       todayStats: {
@@ -305,14 +306,42 @@ describe("leaderboard/:leaderboardName", () => {
       }
     };
     return request(app)
-      .patch("/api/leaderboard/global")
+      .patch("/api/leaderboards/global")
       .send(memberPlay)
       .expect(200)
       .then(({ body }) => {
         expect(body.addedMember).toEqual({
+          _id: expect.any(String),
           username: 'satoshi',
           todayStats: { date: today, score: 7, timeTaken: '200', correctAns: 2 }
         });
+      });
+  });
+  test('GET: 404 responds with error message when requesting a non-existent leaderboard', () => {
+    return request(app)
+      .get("/api/leaderboards/globalista")
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toEqual({ msg: "leaderboard does not exist" });
+      });
+  });
+  test('PATCH: 404 responds with error message when passed non-existent leaderboard', () => {
+    const today = new Date().toISOString();
+    const memberPlay = {
+      username: "satoshi",
+      todayStats: {
+        date: today,
+        score: 7,
+        timeTaken: "200",
+        correctAns: 2
+      }
+    };
+    return request(app)
+      .patch("/api/leaderboards/globalista")
+      .send(memberPlay)
+      .expect(404)
+      .then(({ body }) => {
+        expect(body).toEqual({ msg: "leaderboard does not exist" });
       });
   });
 });
