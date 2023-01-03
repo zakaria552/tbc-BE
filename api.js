@@ -90,6 +90,36 @@ module.exports = {
             "leaderBoards": ["global", "quizNight"],
         }
     },
+    "POST /api/users": {
+        "description": "adds a new user to users's collection", 
+        "queries": [],
+        "requestBody": {
+            "userId": "dfj3lkj4l",
+            "username": "waffle23",
+        },
+        "exampleResponse": {
+            "userId": "dfj3lkj4l",
+            "username": "waffle",
+            "currentStreak": 0,
+            "highestScore": 0,
+            "dateLastPlayed": "",
+            "todayStats": {
+                "date": "",
+                "score": 0,
+                "timeTaken": "",
+                "correctAns": 0,
+            },
+            "historyStats": {
+                "date": "",
+                "score": 0,
+                "timeTaken": "",
+                "correctAns": 0,
+            },
+            "achievements": [],
+            "friends":[],
+            "leaderBoards": []
+        }
+    },
     "DELETE /api/users/:userId": {
         "description": "deletes an existing user",
         "queries": [],
@@ -136,7 +166,7 @@ module.exports = {
                 "timeTaken": "120",
                 "correctAns": 4,
             },
-            "achievements": "7 day streak",
+            "achievements": ["7 day streak"],
             "friends":["2", "j32"],
             "leaderBoards": ["quizNight"]
         }
