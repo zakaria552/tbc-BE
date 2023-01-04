@@ -20,8 +20,8 @@ exports.fetchTodaysQuestions = async () => {
     return result;
   });
   if (!questions.length) {
-    await deleteOldQuestions();
-    await resetGlobalLeaderboard();
+    deleteOldQuestions();
+    resetGlobalLeaderboard();
     return await this.insertTodaysQuestions();
   }
   return questions;
