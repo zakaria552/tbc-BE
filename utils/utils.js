@@ -11,7 +11,7 @@ exports.deleteOldQuestions = () => {
       const dateDifference = Math.floor(
         (date - questionDate) / 1000 / 60 / 60 / 24
       );
-      if (dateDifference > 14) return dateDifference;
+      if (dateDifference > 30) return dateDifference;
     });
 
     const promises = questionDelete.map((question) => {
@@ -22,12 +22,17 @@ exports.deleteOldQuestions = () => {
 };
 
 exports.resetGlobalLeaderboard = async () => {
+  const boards = await LeaderboardModel.find();
   const todaysDate = new Date().toISOString().split("T")[0];
-  const global = {
-    date: todaysDate,
-    members: [],
-    leaderboardName: 'global'
-  };
   await LeaderboardModel.deleteMany();
-  await LeaderboardModel.insertMany(global);
+
+  boardPromises = boards.map(board => {
+    LeaderboardModel.insertMany({
+      date: todaysDate,
+      members: [],
+      leaderboardName: board.leaderboardName
+    });
+  });
+
+  await Promise.all(boardPromises);
 };
